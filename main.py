@@ -32,7 +32,6 @@ def GCDworstcase(k):
     g = GCD(m, n)
     return g
 
-
 #counts num of multiplications, algorithmn fromn canvas for next 3 functions  
 exp1_counter = 0
 def exp(a,n):
@@ -65,6 +64,7 @@ def exp3(a, n):
     else:
         exp3_counter += 2
         return a * exp3(a, (n-1)//2) * exp3(a, (n-1)//2)
+ 
     #part 1 of the project calulates num of additions for fibanacci and num of modulo operations for gcd and creates scatterplots for both
 def part1():
     k_values = []
@@ -151,7 +151,7 @@ def part2():
 def main():
     # print(exp(2, 10))
 #un comment the part you want to run
-    # part1()
-    part2()
+     part1()
+    # part2()
 if __name__ == "__main__":
     main()
