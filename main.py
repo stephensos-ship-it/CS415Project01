@@ -168,7 +168,6 @@ def part2():
     plt.scatter(n_values, exp1_values , color='blue', marker='o', s=100, alpha=0.7, edgecolors='black', label='Decrease-by-one')
     plt.scatter(n_values, exp3_values , color='green', marker='o', s=100, alpha=0.7, edgecolors='black', label='Divide-and-Conquer')
     plt.scatter(n_values, exp2_values , color='red', marker='x', s=100, alpha=0.7, edgecolors='black', label='Decrease-by-constant-factor')
-    plt.title("exp1 Counter vs n")
     plt.xlabel("n")
     plt.ylabel("# OF MULTIPLICATIONS")
     plt.legend(['Decrease-by-one', 'Divide-and-Conquer', 'Decrease-by-constant-factor'])
@@ -222,10 +221,42 @@ def part3():
         plotSorting(selection_n, selection_comps, insertion_n, insertion_comps, case_names[num])    
 
 def main():
-# Uncomment the part you want to run! 
-     part1()
-     part2()
-     part3()
+    choice = input("Enter 1 for UserTestMode or 2 for ScatterPlotMode: ")
+    if choice == "1":
+
+        # Task 1 
+        k = int(input("Enter value for k: "))
+        m = fibrecur(k+1)
+        n = fibrecur(k)
+        print(f"Fib({k}): ", n)
+        print(f"GCD({m}, {n}): ", GCDworstcase(k))
+
+        # Task 2
+        a = int(input("Enter value of a: "))
+        n = int(input("Enter value of n: "))
+        global exp1_counter, exp2_counter, exp3_counter
+        exp1_counter = exp2_counter = exp3_counter = 0
+        print(f"Answer for: {a}^{n}:")
+        print(f"Decrease-by-one: {exp(a, n)}")
+        print(f"Decrease-by-constant-factor: {exp2(a, n)}")
+        print(f"Divide-and-Conquer: {exp3(a, n)}")
+
+        # Task 3
+        n = int(input("Enter list size (10-100, increment 10): "))
+        if n < 10 or n > 100 or n % 10 != 0:
+            print("Invalid list size. Please enter a multiple of 10 between 10 and 100.")
+            return
+        with open(f"data/smallSet/data{n}.txt") as f:
+            arr = [int(line.strip()) for line in f]
+        arr2 = arr.copy()
+        selectionSort(arr)
+        insertionSort(arr2)
+        print("Selection Sort result:", arr)
+        print("Insertion Sort result:", arr2)
+    else:
+        part1()
+        part2()
+        part3()
 
 if __name__ == "__main__":
     main()
