@@ -20,5 +20,4 @@ Instructions to Run Code:
                 
     Note: Close each matplotlib window to see the next plot.
 
-We Gave Feedback To:
-We Received Feedback From:
+
