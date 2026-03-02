@@ -2,19 +2,16 @@ import matplotlib.pyplot as plt
 
 
 fib_counter = 0
-#prints fibanacci sequence of k value recursively
+## Calculates the fibonacci sequence recursively and counts the number of additions.
 def fibrecur(k):
     global fib_counter
-
-    if k == 1:
+    if k <= 2:
         return 1
-    if k == 2:
-        return 1
-    else:
-        fib_counter += 1
-        return fibrecur(k-1) + fibrecur(k-2)
+    result = fibrecur(k-1) + fibrecur(k-2)
+    fib_counter += 1  
+    return result
 
-#gcd of two nums using euclidean algorithm recursively
+## Calculates the greatest common divisor of two numbers using the Euclidean algorithm recursively and counts the number of modulo operations.
 def GCD(m, n):
     if n == 0:
         return m
@@ -23,9 +20,9 @@ def GCD(m, n):
         gcd_mod_counter += 1
         return GCD(n, m % n)
 
-#using fibanacci function calculates operations in worst case of gcd which is when the two numbers are consecutive fibanacci numbers
+## Using fibanacci function calculates operations in worst case of gcd which is when the two numbers are consecutive fibonacci numbers
 def GCDworstcase(k):
-    global gcd_counter
+    global gcd_mod_counter
     m = fibrecur(k+1)
     n = fibrecur(k)
 
@@ -33,8 +30,8 @@ def GCDworstcase(k):
     g = GCD(m, n)
     return g
 
-#counts num of multiplications, algorithmn fromn canvas for next 3 functions  
 exp1_counter = 0
+## Decrease-by-one Algorithm w/ an additional counter for the number of multiplications.
 def exp(a,n):
     global exp1_counter
     if n == 0:
@@ -43,6 +40,7 @@ def exp(a,n):
     return exp(a, n-1) * a
 
 exp2_counter = 0
+## Decrease-by-constant-factor Algorithm w/ an additional counter for the number of multiplications.
 def exp2(a, n):
     global exp2_counter
     if n == 0:
@@ -55,17 +53,21 @@ def exp2(a, n):
         return a *exp2(a, (n-1)//2) ** 2
     
 exp3_counter = 0
+## Divide-and-Conquer Algorithm w/ an additional counter for the number of multiplications.
 def exp3(a, n):
     global exp3_counter
     if n == 0:
         return 1
     if n % 2 == 0:
+        half = exp3(a, n // 2)
         exp3_counter += 1
-        return exp3(a, n//2) * exp3(a, n//2)
+        return half * half
     else:
+        half = exp3(a, (n - 1) // 2)
         exp3_counter += 2
-        return a * exp3(a, (n-1)//2) * exp3(a, (n-1)//2)
+        return a * half * half
 
+## SelectionSort Alogorithm w/ an additional counter for the number of comparisons.
 def selectionSort(mylist):
     comparisons = 0
 
@@ -81,6 +83,7 @@ def selectionSort(mylist):
 
     return comparisons 
 
+## InsertionSort Alogorithm w/ an additional counter for the number of comparisons.
 def insertionSort(arr):
     comparisons = 0
 
@@ -100,53 +103,50 @@ def insertionSort(arr):
     
     return comparisons
 
-    #part 1 of the project calulates num of additions for fibanacci and num of modulo operations for gcd and creates scatterplots for both
+## Plots two scatterplots; one for num of additions on FIB Sequence , one for num of modulo operations on GCD.
 def part1():
     k_values = []
     fib_values = []
+    fib_n_values = []
     gcd_values = []
     
-    print("k\tfib_counter\tgcd_mod_counter")
-    for k in range(1, 21):
-        global fib_counter
+    for k in range(1, 30):
+        global fib_counter, gcd_mod_counter
         fib_counter = 0
-        fibrecur(k)
+        fib_k = fibrecur(k)
         fib_add = fib_counter
 
         fib_counter = 0     
-        global gcd_mod_counter
         gcd_mod_counter = 0
         GCDworstcase(k)
 
-        print(f"{k}\t{fib_add}\t{gcd_mod_counter}")
         k_values.append(k)
-        fib_values.append(fib_add)      
+        fib_values.append(fib_add)   
+        fib_n_values.append(fib_k)   
         gcd_values.append(gcd_mod_counter)
-
-    #da scatterplot for fib counter
  
     plt.scatter(k_values, fib_values , color='blue', marker='o', s=100, alpha=0.7, edgecolors='black')
     plt.title("Fibonacci Counter vs k")
     plt.xlabel("K")
     plt.ylabel("# OF ADDITIONS")
     plt.show()
-    #CLOSE THE PREVIOUS PLOT TO SEE THE NEXT PLOT
-    #scatterplot for gcd mod counter
-    plt.scatter(k_values, gcd_values , color='red', marker='o', s=100, alpha=0.7, edgecolors='black')
-    plt.title("GCD Modulo Counter vs k")    
-    plt.xlabel("K")
+
+    plt.scatter(fib_n_values, gcd_values , color='red', marker='o', s=100, alpha=0.7, edgecolors='black')
+    plt.title("GCD Modulo Counter vs n")    
+    plt.xlabel("n = Fib(k)")
     plt.ylabel("# OF MODULO OPERATIONS")
     plt.show()    
-#part 2 of the project calculates num of multiplications for 3 different algorithms for exponentiation and creates scatterplots for all 3 algorithms
+
+## Plots a scatterplot for the Number of Multiplications for 3 different algos of exponentiation.
 def part2():
-    #arrays of values for scatterplots 
+    # Arrays of values for scatterplots 
     n_values = []
     exp1_values = []
     exp2_values = []
     exp3_values = []
 
     print("n\texp1\t\texp2\t\texp3")
-    for n in range(0, 21):
+    for n in range(0, 60):
         global exp1_counter, exp2_counter, exp3_counter
         exp1_counter = 0
         exp2_counter = 0  
@@ -164,26 +164,18 @@ def part2():
         exp1_values.append(exp1_val)
         exp2_values.append(exp2_val)
         exp3_values.append(exp3_val)
-    #scatterplot for exp1
-    plt.scatter(n_values, exp1_values , color='blue', marker='o', s=100, alpha=0.7, edgecolors='black')
+
+    plt.scatter(n_values, exp1_values , color='blue', marker='o', s=100, alpha=0.7, edgecolors='black', label='Decrease-by-one')
+    plt.scatter(n_values, exp3_values , color='green', marker='o', s=100, alpha=0.7, edgecolors='black', label='Divide-and-Conquer')
+    plt.scatter(n_values, exp2_values , color='red', marker='x', s=100, alpha=0.7, edgecolors='black', label='Decrease-by-constant-factor')
     plt.title("exp1 Counter vs n")
     plt.xlabel("n")
     plt.ylabel("# OF MULTIPLICATIONS")
-   
-    #scatterplot for exp2
-    plt.scatter(n_values, exp2_values , color='red', marker='o', s=100, alpha=0.7, edgecolors='black')
-    plt.title("exp2 Counter vs n")  
-    plt.xlabel("n")
-    plt.ylabel("# OF MULTIPLICATIONS")
-
-    #scatterplot for exp3
-    plt.scatter(n_values, exp3_values , color='green', marker='o', s=100, alpha=0.7, edgecolors='black')
-    plt.title("exp3 Counter vs n")    
-    plt.xlabel("n")
-    plt.ylabel("# OF MULTIPLICATIONS")
+    plt.legend(['Decrease-by-one', 'Divide-and-Conquer', 'Decrease-by-constant-factor'])
+    plt.title("Multiplications M(n) vs n")
     plt.show()
 
-## Plots the scatterplots for the sorting algorithms
+## Plots the scatterplots for the sorting algorithms.
 def plotSorting(firstval, secondval, thirdVal, fourthVal, case_name):
     plt.figure(figsize=(12, 6))
     plt.scatter(firstval, secondval , color='blue', marker='o', s=100, alpha=0.7, edgecolors='black', label='Selection Sort')
@@ -198,7 +190,7 @@ def plotSorting(firstval, secondval, thirdVal, fourthVal, case_name):
     plt.xticks(range(0, 10500, 500))  # x axis increments
     plt.show()
 
-## Builds an array of arrays for the sorting algorithms from testSet folder 
+## Builds an array of arrays for the sorting algorithms from testSet folder.
 def buildArray(potentialvar):
     listOfArrays = []
     for num in range(500, 10500, 500):
@@ -207,7 +199,7 @@ def buildArray(potentialvar):
         listOfArrays.append(arr)
     return listOfArrays
         
-## Runs the sorting algorithms on the arrays and plots the results
+## Runs the sorting algorithms on the arrays and plots the results.
 def part3():
     data = [ "", "_sorted", "_rSorted"]
     case_names = ["Average", "Best", "Worst"]
@@ -229,13 +221,11 @@ def part3():
 
         plotSorting(selection_n, selection_comps, insertion_n, insertion_comps, case_names[num])    
 
-
-    
 def main():
 # Uncomment the part you want to run! 
      part1()
-    # part2()
-    # part3()
+     part2()
+     part3()
 
 if __name__ == "__main__":
     main()
