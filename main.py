@@ -14,23 +14,25 @@ def fibrecur(k):
         return fibrecur(k-1) + fibrecur(k-2)
 
 #gcd of two nums using euclidean algorithm recursively
+gcd_mod_counter = 0
 def GCD(m, n):
+    global gcd_mod_counter
     if n == 0:
         return m
     else:
-        global gcd_mod_counter
         gcd_mod_counter += 1
         return GCD(n, m % n)
 
 #using fibanacci function calculates operations in worst case of gcd which is when the two numbers are consecutive fibanacci numbers
 def GCDworstcase(k):
-    global gcd_counter
+    global gcd_mod_counter
     m = fibrecur(k+1)
     n = fibrecur(k)
 
     gcd_mod_counter = 0
     g = GCD(m, n)
     return g
+
 
 #counts num of multiplications, algorithmn fromn canvas for next 3 functions  
 exp1_counter = 0
@@ -64,7 +66,6 @@ def exp3(a, n):
     else:
         exp3_counter += 2
         return a * exp3(a, (n-1)//2) * exp3(a, (n-1)//2)
- 
     #part 1 of the project calulates num of additions for fibanacci and num of modulo operations for gcd and creates scatterplots for both
 def part1():
     k_values = []
@@ -151,7 +152,40 @@ def part2():
 def main():
     # print(exp(2, 10))
 #un comment the part you want to run
-     part1()
+    # part1()
     # part2()
+    #Task 1: User is prompted for the value of k; program outputs the value 
+    # of Fib(k) and GCD(m, n) where m = Fib(k+1) and n = Fib(k) .
+    choice = input("User mode:\n 1. UserTestMode\n 2. ScatterPlotMode\n Enter 1 or 2: ")
+    if choice == "1":
+        k = int(input("Enter value of k: "))
+        m = fibrecur(k+1)
+        n = fibrecur(k)
+        print("Fib(k): ", n)
+        print("GCD(m, n): ", GCD(m, n))
+
+        #Task 2: User is prompted for the value of a and n.;\1
+        #program outputs the value an using each of the three algorithms.
+        a = int(input("Enter value of a: "))
+        n = int(input("Enter value of n: "))
+        global exp1_counter, exp2_counter, exp3_counter
+        exp1_counter = 0
+        exp2_counter = 0  
+        exp3_counter = 0
+
+        print("test")
+        result1 = exp(a, n)
+        print(f"exp(a, n) using algorithm 1: {result1}, multiplications: {exp1_counter}")
+
+        result2 = exp2(a, n)
+        print(f"exp(a, n) using algorithm 2: {result2}, multiplications: {exp2_counter}")
+
+        result3 = exp3(a, n)
+        print(f"exp(a, n) using algorithm 3: {result3}, multiplications: {exp3_counter}")
+    if choice == "2":
+        part1()
+        part2()
+
+    
 if __name__ == "__main__":
     main()
