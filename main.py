@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 fib_counter = 0
 #prints fibanacci sequence of k value recursively
 def fibrecur(k):
@@ -64,7 +65,41 @@ def exp3(a, n):
     else:
         exp3_counter += 2
         return a * exp3(a, (n-1)//2) * exp3(a, (n-1)//2)
- 
+
+def selectionSort(mylist):
+    comparisons = 0
+
+    n = len(mylist)
+    for i in range(n-1):
+        min_index = i
+        for j in range(i+1, n):
+            comparisons += 1
+            if mylist[j] < mylist[min_index]:
+                min_index = j
+        min_value = mylist.pop(min_index)
+        mylist.insert(i, min_value)
+
+    return comparisons 
+
+def insertionSort(arr):
+    comparisons = 0
+
+    n = len(arr)
+    
+    if n <= 1:
+        return 0
+    for i in range(1, n):
+        key = arr[i]         
+        j = i - 1
+        while j >= 0 and key < arr[j]: 
+            comparisons += 1
+            arr[j + 1] = arr[j]
+            j -= 1
+        comparisons += 1
+        arr[j + 1] = key
+    
+    return comparisons
+
     #part 1 of the project calulates num of additions for fibanacci and num of modulo operations for gcd and creates scatterplots for both
 def part1():
     k_values = []
@@ -148,10 +183,60 @@ def part2():
     plt.ylabel("# OF MULTIPLICATIONS")
     plt.show()
 
+## Plots the scatterplots for the sorting algorithms
+def plotSorting(firstval, secondval, thirdVal, fourthVal, case_name):
+    plt.figure(figsize=(12, 6))
+    plt.scatter(firstval, secondval , color='blue', marker='o', s=100, alpha=0.7, edgecolors='black', label='Selection Sort')
+    plt.scatter(thirdVal, fourthVal , color='green', marker='x', s=100, alpha=0.7, edgecolors='black', label='Insertion Sort')
+    plt.title("number of comparisons C(n) for " + case_name + " Case")    
+    plt.xlabel("n")
+    plt.ylabel("# OF COMPARISONS")
+    plt.legend()
+    plt.xlim(0, 10500)  # x axis bounds
+    plt.ylim(0, 50000000)
+    plt.yticks(range(0, 50000000, 10000000))
+    plt.xticks(range(0, 10500, 500))  # x axis increments
+    plt.show()
+
+## Builds an array of arrays for the sorting algorithms from testSet folder 
+def buildArray(potentialvar):
+    listOfArrays = []
+    for num in range(500, 10500, 500):
+        with open("data/testSet/data" + str(num) + potentialvar + ".txt", "r") as f:
+            arr = [int(line.strip()) for line in f]
+        listOfArrays.append(arr)
+    return listOfArrays
+        
+## Runs the sorting algorithms on the arrays and plots the results
+def part3():
+    data = [ "", "_sorted", "_rSorted"]
+    case_names = ["Average", "Best", "Worst"]
+
+    ## Interate through all array types
+    for num in range(0, 3, 1):
+        arr = buildArray(data[num])
+        ## Make a copy as we need to use the same array for both sorting algorithms
+        arr2 = [a.copy() for a in arr]
+
+        selection_n, selection_comps = [], []
+        insertion_n, insertion_comps = [], []
+
+        for ar, ar2 in zip(arr, arr2):
+            selection_n.append(len(ar))
+            selection_comps.append(selectionSort(ar))
+            insertion_n.append(len(ar2))
+            insertion_comps.append(insertionSort(ar2))
+
+        plotSorting(selection_n, selection_comps, insertion_n, insertion_comps, case_names[num])    
+
+
+    
 def main():
-    # print(exp(2, 10))
-#un comment the part you want to run
+# Uncomment the part you want to run! 
      part1()
     # part2()
+    # part3()
+
 if __name__ == "__main__":
     main()
+    
